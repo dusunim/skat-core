@@ -1,0 +1,7 @@
+---
+BasedOnStyle: Chromium
+ColumnLimit: 100
+LambdaBodyIndentation: OuterScope
+InsertNewlineAtEOF: true
+
+...
