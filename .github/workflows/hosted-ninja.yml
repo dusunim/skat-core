@@ -13,12 +13,12 @@
 #   store the built packages artifacts, hence it will be a no-op if those are restored
 #   from cache (e.g., already previously built).
 # - Finally builds the sources with Ninja, and tests as well.
-name: hosted-ninja-vcpkg_submod-autocache
+name: hosted-ninja-autocache
 on:
   push:
-    pull_request:
     branches:
     - main
+  pull_request:
   workflow_dispatch:
   schedule:
   - cron: '0 1 * * *'
@@ -61,6 +61,6 @@ jobs:
       - name: Run CMake+vcpkg+Ninja+CTest to build packages and generate/build/test the code.
         uses: lukka/run-cmake@v10
         with:
-          configurePreset: 'ninja-multi-vcpkg'
-          buildPreset: 'ninja-vcpkg-release'
-          testPreset: 'test-release'
+          configurePreset: 'ninja'
+          buildPreset: 'ninja/release'
+          testPreset: 'test/release'
