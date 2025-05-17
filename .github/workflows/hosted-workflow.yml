@@ -12,12 +12,12 @@
 name: hosted-workflow
 on:
   push:
+    branches: [main]
   pull_request:
-    branches:
-    - main
+    branches: [main]
   workflow_dispatch:
   schedule:
-  - cron: '0 1 * * *'
+    - cron: "0 1 * * *"
 
 jobs:
   job:
@@ -36,11 +36,11 @@ jobs:
       # Tells vcpkg where binary packages are stored.
       VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg/bincache
       # Let's use GitHub Action cache as storage for the vcpkg Binary Caching feature.
-      VCPKG_BINARY_SOURCES: 'clear;x-gha,readwrite'
+      VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
 
     steps:
-    # Set env vars needed for vcpkg to leverage the GitHub Action cache as a storage
-    # for Binary Caching.
+      # Set env vars needed for vcpkg to leverage the GitHub Action cache as a storage
+      # for Binary Caching.
       - uses: actions/github-script@v7
         with:
           script: |
