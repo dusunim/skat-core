@@ -2,16 +2,13 @@ cmake_minimum_required(VERSION 3.10)
 
 project(skat-core)
 
-find_package(fmt CONFIG REQUIRED)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(
-    CPP_SOURCES
-    src/main.cpp
-)
-
-add_executable(skat-core ${CPP_SOURCES})
-
-target_link_libraries(skat-core PRIVATE fmt::fmt)
+add_subdirectory(source/foundation)
+add_subdirectory(test/test_foundation)
 
 add_custom_target(
     check-format
@@ -26,3 +23,6 @@ add_custom_target(
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMENT "checking format in src..."
 )
+
+set_target_properties(check-format PROPERTIES FOLDER "workflow")
+set_target_properties(format PROPERTIES FOLDER "workflow")
