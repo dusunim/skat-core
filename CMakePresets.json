@@ -1,112 +1,142 @@
 {
   "version": 8,
   "cmakeMinimumRequired": {
-      "major": 3,
-      "minor": 21,
-      "patch": 0
+    "major": 3,
+    "minor": 21,
+    "patch": 0
   },
   "configurePresets": [
-      {
-          "name": "ninja-multi-vcpkg",
-          "displayName": "Ninja Multi-Config",
-          "description": "Configure with vcpkg toolchain and generate Ninja project files for all configurations",
-          "binaryDir": "${sourceDir}/builds/${presetName}",
-          "generator": "Ninja Multi-Config",
-          "toolchainFile": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake"
+    {
+      "name": "vcpkg/base",
+      "binaryDir": "${sourceDir}/_intermediate/${presetName}",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": {
+          "value": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake",
+          "type": "FILEPATH"
+        },
+        "VCPKG_INSTALLED_DIR": {
+          "value": "${sourceDir}/_intermediate/vcpkg_installed",
+          "type": "PATH"
+        }
       }
+    },
+    {
+      "name": "ninja",
+      "inherits": "vcpkg/base",
+      "displayName": "Ninja cross-plaform config",
+      "description": "configure with vcpkg toolchain and generate Ninja project files for all configurations",
+      "generator": "Ninja Multi-Config"
+    },
+    {
+      "name": "vs",
+      "inherits": "vcpkg/base",
+      "displayName": "Visual Studio 17 Windows config",
+      "description": "configure with vcpkg toolchain and generate Visual Studio project files for all configurations",
+      "generator": "Visual Studio 17 2022"
+    }
   ],
   "buildPresets": [
-      {
-          "name": "ninja-vcpkg-debug",
-          "configurePreset": "ninja-multi-vcpkg",
-          "displayName": "Build (Debug)",
-          "description": "Build with Ninja/vcpkg (Debug)",
-          "configuration": "Debug"
-      },
-      {
-          "name": "ninja-vcpkg-release",
-          "configurePreset": "ninja-multi-vcpkg",
-          "displayName": "Build (Release)",
-          "description": "Build with Ninja/vcpkg (Release)",
-          "configuration": "Release"
-      },
-      {
-          "name": "ninja-vcpkg",
-          "configurePreset": "ninja-multi-vcpkg",
-          "displayName": "Build",
-          "description": "Build with Ninja/vcpkg",
-          "hidden": true
-      },
-      {
-          "name": "ninja-vcpkg-check-format",
-          "configurePreset": "ninja-multi-vcpkg",
-          "displayName": "Build",
-          "targets": [
-              "check-format"
-          ],
-          "description": "Build with Ninja/vcpkg check-format"
-      },
-      {
-          "name": "ninja-vcpkg-format",
-          "configurePreset": "ninja-multi-vcpkg",
-          "displayName": "Build",
-          "targets": [
-              "format"
-          ],
-          "description": "Build with Ninja/vcpkg format"
-      }
+    {
+      "name": "ninja/base",
+      "configurePreset": "ninja",
+      "hidden": true
+    },
+    {
+      "name": "vs/base",
+      "configurePreset": "vs",
+      "hidden": true
+    },
+    {
+      "name": "ninja/debug",
+      "inherits": "ninja/base",
+      "displayName": "build (debug)",
+      "description": "build with Ninja/vcpkg (debug)",
+      "configuration": "Debug"
+    },
+    {
+      "name": "ninja/release",
+      "inherits": "ninja/base",
+      "displayName": "build (release)",
+      "description": "build with Ninja/vcpkg (release)",
+      "configuration": "Release"
+    },
+    {
+      "name": "vs/debug",
+      "inherits": "vs/base",
+      "displayName": "build (debug)",
+      "description": "build with Visual Studio 17/vcpkg (debug)",
+      "configuration": "Debug"
+    },
+    {
+      "name": "vs/release",
+      "configurePreset": "vs",
+      "displayName": "build (release)",
+      "description": "build with Visual Studio 17/vcpkg (release)",
+      "configuration": "Release"
+    },
+    {
+      "name": "ninja/check-format",
+      "configurePreset": "ninja",
+      "displayName": "build",
+      "targets": ["check-format"],
+      "description": "build with Ninja/vcpkg check-format"
+    },
+    {
+      "name": "ninja/format",
+      "configurePreset": "ninja",
+      "displayName": "build",
+      "targets": ["format"],
+      "description": "build with Ninja/vcpkg format"
+    }
   ],
   "workflowPresets": [
-      {
-          "name": "format",
-          "steps": [
-              {
-                  "name": "ninja-multi-vcpkg",
-                  "type": "configure"
-              },
-              {
-                  "name": "ninja-vcpkg-format",
-                  "type": "build"
-              }
-          ]
-      },
-      {
-          "name": "check-format",
-          "steps": [
-              {
-                  "name": "ninja-multi-vcpkg",
-                  "type": "configure"
-              },
-              {
-                  "name": "ninja-vcpkg-check-format",
-                  "type": "build"
-              }
-          ]
-      }
+    {
+      "name": "format",
+      "steps": [
+        {
+          "name": "ninja",
+          "type": "configure"
+        },
+        {
+          "name": "ninja/format",
+          "type": "build"
+        }
+      ]
+    },
+    {
+      "name": "check-format",
+      "steps": [
+        {
+          "name": "ninja",
+          "type": "configure"
+        },
+        {
+          "name": "ninja/check-format",
+          "type": "build"
+        }
+      ]
+    }
   ],
   "testPresets": [
-      {
-          "name": "test-ninja-vcpkg",
-          "configurePreset": "ninja-multi-vcpkg",
-          "hidden": true
-      },
-      {
-          "name": "test-debug",
-          "description": "Test (Debug)",
-          "displayName": "Test (Debug)",
-          "configuration": "Debug",
-          "inherits": [
-              "test-ninja-vcpkg"
-          ]
-      },
-      {
-          "name": "test-release",
-          "description": "Test (Release)",
-          "displayName": "Test (Release)",
-          "configuration": "Release",
-          "inherits": [
-              "test-ninja-vcpkg"
-          ]
-      }
+    {
+      "name": "test/base",
+      "configurePreset": "ninja",
+      "hidden": true
+    },
+    {
+      "name": "test/debug",
+      "description": "Test (Debug)",
+      "displayName": "Test (Debug)",
+      "configuration": "Debug",
+      "inherits": ["test/base"]
+    },
+    {
+      "name": "test/release",
+      "description": "Test (Release)",
+      "displayName": "Test (Release)",
+      "configuration": "Release",
+      "inherits": ["test/base"]
+    }
   ]
 }

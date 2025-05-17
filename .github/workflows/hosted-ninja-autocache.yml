@@ -13,15 +13,15 @@
 #   store the built packages artifacts, hence it will be a no-op if those are restored
 #   from cache (e.g., already previously built).
 # - Finally builds the sources with Ninja, and tests as well.
-name: hosted-ninja-vcpkg_submod-autocache
+name: hosted-ninja-autocache
 on:
   push:
-    pull_request:
     branches:
-    - main
+      - main
+  pull_request:
   workflow_dispatch:
   schedule:
-  - cron: '0 1 * * *'
+    - cron: "0 1 * * *"
 
 jobs:
   job:
@@ -30,7 +30,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, macos-15, windows-2022]
+        os: [ubuntu-22.04, macos-15, windows-2022]
     #env:
     #
     # [OPTIONAL] Define the vcpkg's triplet
@@ -50,7 +50,7 @@ jobs:
       - name: Restore from cache and setup vcpkg executable and data files.
         uses: lukka/run-vcpkg@v11
         with:
-          vcpkgJsonGlob: 'vcpkg.json'
+          vcpkgJsonGlob: "vcpkg.json"
 
       # Note: if the preset misses the "configuration", it is possible to explicitly select the
       # configuration with the additional `--config` flag, e.g.:
@@ -61,6 +61,6 @@ jobs:
       - name: Run CMake+vcpkg+Ninja+CTest to build packages and generate/build/test the code.
         uses: lukka/run-cmake@v10
         with:
-          configurePreset: 'ninja-multi-vcpkg'
-          buildPreset: 'ninja-vcpkg-release'
-          testPreset: 'test-release'
+          configurePreset: "ninja"
+          buildPreset: "ninja/release"
+          testPreset: "test/release"
