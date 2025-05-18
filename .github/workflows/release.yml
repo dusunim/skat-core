@@ -9,13 +9,11 @@
 # your development machines (i.e. CMake, vcpkg, Ninja) to ensure a perfectly identical
 # and reproducible local build (on your development machine) and a remote build on
 # build agents.
-name: build-ninja
+name: release
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-  workflow_dispatch:
+    tags:
+      - "release/*" # invoked when a version tag is pushed, e.g. release/1.2.3
 
 jobs:
   job:
@@ -86,21 +84,41 @@ jobs:
         run: |
           cmake --preset ninja
 
-      - name: check-format
-        if: runner.os == 'Linux'
+      - name: extract version from tag
+        id: version
         run: |
-          cmake --workflow --preset check-format
+          echo "VERSION=${GITHUB_REF#refs/tags/release/}" >> $GITHUB_OUTPUT
 
-      # Build (Release configuration only) the whole project with Ninja (which is spawn by CMake).
-      #
-      # Note: if the preset misses the "configuration", it is possible to explicitly select the
-      # configuration with the `--config` flag, e.g.:
-      # run: cmake --build --preset ninja-vcpkg --config Release
-      - name: Build (Release configuration)
+      - name: configure with CMake
+        run: >
+          cmake --preset ninja -DCPACK_PACKAGE_VERSION=${{ steps.version.outputs.VERSION }}
+
+      - name: build with release configuration
         run: |
           cmake --build --preset ninja/release
 
-      # Test the whole project with CTest, again Release configuration only.
-      - name: Test (Release configuration)
+      - name: package with CPack
         run: |
-          ctest --preset test/release
+          cpack -G TGZ --config ./_intermediate/ninja/CPackConfig.cmake
+
+      - name: Upload release package
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./*.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.DK_PACKAGES }}
+
+      - name: build release documentation
+        run: |
+          echo ${{ github.sha }} > release.txt
+
+      - name: printout release documentation
+        run: cat release.txt
+
+      - name: release
+        uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
+        with:
+          files: release.txt
+          tag_name: ${{ github.ref }}
+          name: "${{ github.repository }} v${{ steps.version.outputs.VERSION }}"
