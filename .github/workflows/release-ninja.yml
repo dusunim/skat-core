@@ -9,15 +9,11 @@
 # your development machines (i.e. CMake, vcpkg, Ninja) to ensure a perfectly identical
 # and reproducible local build (on your development machine) and a remote build on
 # build agents.
-name: ninja-build
+name: release-ninja
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-  workflow_dispatch:
-  schedule:
-    - cron: "0 1 * * *"
+    tags:
+      - "v*" # invoked when a version tag is pushed, e.g. v1.2.3
 
 jobs:
   job:

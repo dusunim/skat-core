@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.10)
 
 project(skat-core)
 
-set_property(GLOBAL PROPERTY USE_FOLDERS on)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED on)
-set(CMAKE_CXX_EXTENSIONS off)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_subdirectory(source/foundation)
 add_subdirectory(test/test_foundation)
@@ -38,7 +38,7 @@ if(NOT DEFINED CPACK_PACKAGE_VERSION)
 endif()
 
 if(MSVC)
-  set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_CONFIG_NAME}" cache path "" FORCE)
+  set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_CONFIG_NAME}" CACHE PATH "" FORCE)
 endif()
 
 install(DIRECTORY "${CMAKE_SOURCE_DIR}/include/" DESTINATION include)

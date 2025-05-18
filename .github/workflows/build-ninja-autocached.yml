@@ -1,4 +1,4 @@
-name: ninja-build-autocache
+name: build-ninja-autocached
 on:
   push:
     branches:
