@@ -106,14 +106,6 @@ jobs:
       # On Windows runners, let's ensure to have the Developer Command Prompt environment setup correctly.
       # As used here the Developer Command Prompt created is targeting x64 and using the default the Windows SDK.
       - uses: ilammy/msvc-dev-cmd@v1
-      # Run CMake to generate Ninja project files, using the vcpkg's toolchain file to resolve and install
-      # the dependencies as specified in vcpkg.json. Note that the vcpkg's toolchain is specified
-      # in the CMakePresets.json file.
-      # This step also runs vcpkg with Binary Caching leveraging GitHub Action cache to
-      # store the built packages artifacts.
-      - name: Restore from cache the dependencies and generate project files
-        run: |
-          cmake --preset ninja
 
       - name: extract version from tag
         id: vars
@@ -121,9 +113,14 @@ jobs:
         run: |
           echo "VERSION=${GITHUB_REF#refs/tags/release/}" >> $GITHUB_OUTPUT
 
+      # Run CMake to generate Ninja project files, using the vcpkg's toolchain file to resolve and install
+      # the dependencies as specified in vcpkg.json. Note that the vcpkg's toolchain is specified
+      # in the CMakePresets.json file.
+      # This step also runs vcpkg with Binary Caching leveraging GitHub Action cache to
+      # store the built packages artifacts.
       - name: configure with CMake
         run: >
-          cmake --preset ninja -DCPACK_PACKAGE_VERSION=${{ steps.vars.outputs.VERSION }}
+          cmake --preset ninja -DCPACK_PACKAGE_VERSION="${{ steps.vars.outputs.VERSION }}"
 
       - name: build with release configuration
         run: |

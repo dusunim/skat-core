@@ -18,7 +18,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  job:
+  build:
     name: ${{ github.workflow }}/${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
