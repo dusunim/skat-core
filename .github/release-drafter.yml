@@ -1,0 +1,16 @@
+name-template: "skat-core v$NEXT_PATCH_VERSION"
+tag-template: "release/$NEXT_PATCH_VERSION"
+categories:
+  - title: "🚀 Features"
+    labels:
+      - "enhancement"
+  - title: "🐛 Bug Fixes"
+    labels:
+      - "bug"
+  - title: "🧰 Maintenance"
+    labels:
+      - "chore"
+change-template: "- $TITLE (#$NUMBER)"
+template: |
+  ## Changes
+  $CHANGES

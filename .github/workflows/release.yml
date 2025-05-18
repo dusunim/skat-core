@@ -25,18 +25,6 @@ jobs:
       fail-fast: true
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: false
-          fetch-depth: 0
-
-      - name: build release documentation
-        run: |
-          echo ${{ github.sha }} > release.txt
-
-      - name: printout release documentation
-        run: cat release.txt
-
       - name: extract repository and version name
         id: vars
         run: |
@@ -47,9 +35,12 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref_type == 'tag'
         with:
-          tag_name: ${{ github.ref }}
+          tag_name: ${{ github.ref_name }}
           name: "${{ steps.vars.outputs.repository }} v${{ steps.vars.outputs.version }}"
-
+          draft: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_PACKAGES }}
+  
   upload-packages:
     needs: release
     name: ${{ github.workflow }}/${{ matrix.os }}
