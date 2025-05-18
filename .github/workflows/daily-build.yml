@@ -1,17 +1,36 @@
-name: build-autocached
+name: daily-build
 on:
-  push:
-    branches:
-      - main
-  pull_request:
   workflow_dispatch:
   schedule:
     - cron: "0 1 * * *"
 
 jobs:
-  job:
+  check-outdated:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: true
+    outputs:
+      changed: ${{ steps.vars.outputs.changed }}
+
+    steps:
+      - name: check out code
+        uses: actions/checkout@v4
+
+      - name: check for changes in last 24 hours
+        id: vars
+        run: |
+          if git log --since="1 day ago" --pretty=oneline | grep .; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  build-if-outdated:
+    needs: check-outdated
+    if: needs.check-outdated.outputs.changed == 'true'
     name: ${{ github.workflow }}/${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+
     strategy:
       fail-fast: false
       matrix:
