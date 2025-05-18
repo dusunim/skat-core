@@ -26,3 +26,20 @@ add_custom_target(
 
 set_target_properties(check-format PROPERTIES FOLDER "workflow")
 set_target_properties(format PROPERTIES FOLDER "workflow")
+
+# package settings
+set(CPACK_PACKAGE_NAME "skat-core")
+set(CPACK_PACKAGE_VENDOR "Cupix")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "skat core library")
+set(CPACK_PACKAGE_CONTACT "dustin.kim@cupix.com")
+
+if(NOT DEFINED CPACK_PACKAGE_VERSION)
+  set(CPACK_PACKAGE_VERSION "0.0.0")
+endif()
+
+if(MSVC)
+  set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_CONFIG_NAME}" CACHE PATH "" FORCE)
+endif()
+
+install(DIRECTORY "${CMAKE_SOURCE_DIR}/include/" DESTINATION include)
+include(CPack)
