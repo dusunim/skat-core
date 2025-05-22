@@ -1,18 +1,8 @@
 get_filename_component(target_name ${CMAKE_CURRENT_SOURCE_DIR} NAME)
-file(GLOB_RECURSE target_files CONFIGURE_DEPENDS
-    *.cpp
-    *.h
-)
+file(GLOB_RECURSE src_files CONFIGURE_DEPENDS *.cpp *.h)
 
-set(include_dirs PUBLIC
-    "${PROJECT_SOURCE_DIR}/include"
-    "${PROJECT_SOURCE_DIR}/internal"
-)
-
-add_executable(${target_name} ${target_files})
-set_target_properties(${target_name} PROPERTIES FOLDER "test")
-
-target_include_directories(${target_name} PUBLIC ${include_dirs})
+add_executable(${target_name} ${src_files})
+cp_common_settings(${target_name} "test")
 
 find_package(fmt CONFIG REQUIRED)
 

@@ -2,9 +2,9 @@
 
 namespace cupix::foundation {
 
-void load() {}
+void loader() {}
 
-void unload() {}
+void unloader() {}
 
-bootstrap::Registrar registrar(load, unload);
+bootstrap::Registrar registrar(loader, unloader);
 }  // namespace cupix::foundation
