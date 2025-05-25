@@ -13,7 +13,7 @@ Although currently minimal, this repository defines the structure and direction 
 
 - Centralized core functionality shared across all products derived from the SKAT platform
 - Minimal dependencies and lightweight structure
-- Fast builds supported via binary cache in the cloud through GitHub Actions workflows
+- Fast builds supported via [binary caching](https://learn.microsoft.com/en-us/vcpkg/users/binarycaching) in the cloud through GitHub Actions workflows
 
 ## Getting Started
 ### Clone the repository
