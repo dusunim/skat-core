@@ -16,5 +16,10 @@ function(cp_common_settings target_name folder_name)
     endif()
 
     target_compile_definitions(${target_name} PRIVATE "${target_name}_EXPORTS")
-    target_include_directories(${target_name} PUBLIC ${cp_include_dir})
+    target_include_directories(${target_name} PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+    )
+
+    install(TARGETS ${target_name} EXPORT skat-coreTargets)
 endfunction()
