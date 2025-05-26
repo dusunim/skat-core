@@ -32,8 +32,12 @@ autolabeler:
   - label: 'chore'
     branch:
       - '/chore\/.+/'
+      - '/build\/.+/'
+      - '/ci\/.+/'
     title:
       - '/chore/i'
+      - '/build/i'
+      - '/ci/i'
 change-template: "- $TITLE (#$NUMBER)"
 template: |
   ## Changes
