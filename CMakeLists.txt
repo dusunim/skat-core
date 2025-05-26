@@ -70,6 +70,8 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/skat-core
   )
 
+
+  
   # install config files
   install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/skat-coreConfig.cmake"
