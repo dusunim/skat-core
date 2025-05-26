@@ -10,6 +10,29 @@ categories:
   - title: "🧰 Maintenance"
     labels:
       - "chore"
+      - "documentation"
+autolabeler:
+  - label: 'enhancement'
+    branch:
+      - '/feature\/.+/'
+      - '/feat\/.+/'
+    title:
+      - '/feat/i'
+  - label: 'bug'
+    title:
+      - '/fix/i'
+  - label: 'documentation'
+    branch:
+      - '/docs\/.+/'
+      - '/doc\/.+/'
+    title:
+      - '/docs/i'
+      - '/doc/i'
+  - label: 'chore'
+    branch:
+      - '/chore\/.+/'
+    title:
+      - '/chore/i'
 change-template: "- $TITLE (#$NUMBER)"
 template: |
   ## Changes
